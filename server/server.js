@@ -10,7 +10,8 @@ const app = express();
 
 //Connect to DataBase
 
-await connectDB();
+// await connectDB();
+connectDB();
 
 //Middleware
 app.use(cors())

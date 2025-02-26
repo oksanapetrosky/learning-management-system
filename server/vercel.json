@@ -1,3 +1,4 @@
+
 {
     "version": 2,
     "builds": [
@@ -5,13 +6,21 @@
             "src": "server.js",
             "use": "@vercel/node",
             "config": {
-                "includeFiles": [
-                    "dist/**"
-                ]
+                "includeFiles": ["dist/**"]
             }
         }
     ],
     "routes": [
+        {
+            "src": "/clerk",
+            "methods": ["POST"],
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, svix-id, svix-timestamp, svix-signature"
+            },
+            "dest": "server.js"
+        },
         {
             "src": "/(.*)",
             "dest": "server.js"
