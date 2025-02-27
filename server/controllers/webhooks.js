@@ -37,9 +37,9 @@ export const clerkWebhooks = async (req, res) => {
         // await User.create(userData);
         try {
           const user = await User.create(userData);
-          console.log("✅ User Saved Successfully:", user);
+          console.log("User Saved Successfully:", user);
       } catch (error) {
-          console.error("❌ MongoDB Insertion Error:", error.message);
+          console.error("MongoDB Insertion Error:", error.message);
       }
       
         res.json({});
