@@ -91,6 +91,16 @@ export const AppContextProvider = (props) => {
   const logToken = async () => {
     console.log(await getToken());
   };
+//   const logToken = async () => {
+//     console.log("logToken() function is running..."); // Debugging message
+//     const token = await getToken();
+//     if (token) {
+//         console.log("Retrieved Token:", token);
+//     } else {
+//         console.log("No token found!");
+//     }
+// };
+
 
   useEffect(() => {
     if (user) {
