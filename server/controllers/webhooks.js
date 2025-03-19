@@ -76,20 +76,20 @@ export const clerkWebhooks = async (req, res) => {
 // after we added secret_stripe_webhook in .env file - we add here from the docs.stripe.com/webhooks
 const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const strikeWebhooks = async (request, response) => {
-  const sig = request.headers["stripe-signature"]; // ✅ Fixed: Changed 'req' to 'request'
+export const stripeWebhooks = async (request, response) => {
+  res.status(200).send({ received: true });
+  const sig = request.headers["stripe-signature"]; 
 
   let event;
 
   try {
-    event = stripeInstance.webhooks.constructEvent( // ✅ Fixed: Changed 'Stripe.webhooks' to 'stripeInstance.webhooks'
+    event = stripeInstance.webhooks.constructEvent( 
       request.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error("Webhook signature verification failed:", err.message);
-    return response.status(400).send(`Webhook Error: ${err.message}`); // ✅ Fixed: Added return
+    return response.status(400).send(`Webhook Error: ${err.message}`); 
   }
 
   // Handle the event
@@ -99,7 +99,7 @@ export const strikeWebhooks = async (request, response) => {
       const paymentIntendId = paymentIntent.id;
 
       try {
-        const session = await stripeInstance.checkout.sessions.list({ // ✅ Fixed: Added 'await'
+        const session = await stripeInstance.checkout.sessions.list({ 
           payment_intent: paymentIntendId,
         });
 
