@@ -12,14 +12,7 @@ import userRouter from "./routes/userRoutes.js";
 //initialize express
 const app = express();
 
-//Connect to DataBase
-// const startServer = async () => {
-//   await connectDB();
-//   await connectCloudinary();
-//   app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-//   });
-// };
+
 
 // startServer();
 connectDB();
