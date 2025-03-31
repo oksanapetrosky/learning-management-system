@@ -167,10 +167,12 @@ export const AppContextProvider = (props) => {
     calculateNoOfLectures,
     enrolledCourses,
     fetchUserEnrolledCourses,
-    backendUrl, userData, setUserData, getToken, fetchAllCourses
+    backendUrl, userData, setUserData, getToken, fetchAllCourses,
+    fetchUserData
   };
 
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
 };
+
