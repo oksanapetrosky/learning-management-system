@@ -1,5 +1,5 @@
 import express from 'express';
-import { addUserRating, getUserCourseProgress, getUserData, purchaseCourse, updateUserCourseProgress, userEnrolledCourses } from '../controllers/userController.js';
+import { addUserRating, getUserCourseProgress, getUserData, purchaseCourse, updateUserCourseProgress, userEnrolledCourses,  initUserIfMissing } from '../controllers/userController.js';
 import { protectRoute } from "../middlewares/authMiddleware.js";
 
 
