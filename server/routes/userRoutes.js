@@ -3,6 +3,9 @@ import { addUserRating, getUserCourseProgress, getUserData, purchaseCourse, upda
 
 const userRouter = express.Router()
 
+//additional step for creating a new user
+userRouter.get("/init", protectRoute, initUserIfMissing);
+
 userRouter.get('/data', getUserData)
 userRouter.get('/enrolled-courses', userEnrolledCourses)
 userRouter.post('/purchase', purchaseCourse)

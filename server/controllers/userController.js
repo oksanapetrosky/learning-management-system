@@ -20,6 +20,29 @@ export const getUserData = async (req, res) => {
   }
 };
 
+//Check if it is work?
+export const initUserIfMissing = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id);
+
+    if (!user) {
+      user = await User.create({
+        _id: req.user._id,
+        email: req.user.email,
+        name: req.user.fullName,
+        imageUrl: req.user.imageUrl,
+      });
+      console.log("✅ New user created via /init");
+    }
+
+    res.json({ success: true, user });
+  } catch (error) {
+    console.error("initUserIfMissing error:", error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 //Users Enrolled Courses with Lecture Links
 export const userEnrolledCourses = async (req, res) => {
   try {
