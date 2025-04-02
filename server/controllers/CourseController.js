@@ -7,7 +7,7 @@ export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find({ isPublished: true })
       .select(["-courseContent", "-enrolledStudents"])
-      .populate({ path: "educator" });
+      .populate({ path: "educator", select: "-password" });
 
     res.json({ success: true, courses });
   } catch (error) {

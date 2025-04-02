@@ -11,7 +11,7 @@ export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL
-  const currency = import.meta.env.VITE_CURRENCY;
+    const currency = import.meta.env.VITE_CURRENCY
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const { user } = useUser();
@@ -23,19 +23,22 @@ export const AppContextProvider = (props) => {
 
   // Fetch all courses
   const fetchAllCourses = async () => {
-    try {
-     const {data} = await axios.get(backendUrl + '/api/course/all');
-
-     if (data.success) {
-      setAllCourses(data.courses)
-     } else{
-      toast.error(data.message)
-     }
-
-    } catch (error) {
-      toast.error(error.message)
-    }
-  };
+  
+          try {
+  
+              const { data } = await axios.get(backendUrl + '/api/course/all');
+  
+              if (data.success) {
+                  setAllCourses(data.courses)
+              } else {
+                  toast.error(data.message)
+              }
+  
+          } catch (error) {
+              toast.error(error.message)
+          }
+  
+      }
 
   //Fetch UserData
   const fetchUserData = async () => {
@@ -94,7 +97,8 @@ export const AppContextProvider = (props) => {
 
     course.courseContent.map((chapter) =>
       chapter.chapterContent.map((lecture) => {
-        time += <lecture className="lectureDuration"></lecture>;
+        // time += <lecture className="lectureDuration"></lecture>;
+        time += lecture.lectureDuration;
       })
     );
     return humanizeDuration(time * 60 * 1000, { units: ["h", "m"] });

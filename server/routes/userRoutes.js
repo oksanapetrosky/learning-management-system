@@ -1,12 +1,12 @@
 import express from 'express';
-import { addUserRating, getUserCourseProgress, getUserData, purchaseCourse, updateUserCourseProgress, userEnrolledCourses,  initUserIfMissing } from '../controllers/userController.js';
+import { addUserRating, getUserCourseProgress, getUserData, purchaseCourse, updateUserCourseProgress, userEnrolledCourses } from '../controllers/userController.js';
 import { protectRoute } from "../middlewares/authMiddleware.js";
 
 
 const userRouter = express.Router()
 
 //additional step for creating a new user
-userRouter.get("/init", protectRoute, initUserIfMissing);
+// userRouter.get("/init", protectRoute, initUserIfMissing);
 
 userRouter.get('/data', getUserData)
 userRouter.get('/enrolled-courses', userEnrolledCourses)

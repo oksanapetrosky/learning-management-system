@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../../components/educator/Navbar";
 import SideBar from "../../components/educator/SideBar";
 import Footer from "../../components/educator/Footer";
-import Dashboard from "./Dashboard";
+// import Dashboard from "./Dashboard";
 
 
 
