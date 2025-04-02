@@ -146,72 +146,74 @@ import Course from "../models/Course.js";
 const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // ✅ Clerk Webhook (No Changes Here)
-// export const clerkWebhooks = async (req, res) => {
-//   try {
-//     if (!req.headers["svix-id"]) {
-//       console.log("⚠️ No svix headers detected, skipping verification (Postman Test Mode)");
-//     } else {
-//       const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
-//       await whook.verify(JSON.stringify(req.body), {
-//         "svix-id": req.headers["svix-id"],
-//         "svix-timestamp": req.headers["svix-timestamp"],
-//         "svix-signature": req.headers["svix-signature"],
-//       });
-//     }
-
-//     const { data, type } = req.body;
-//     switch (type) {
-//       case "user.created": {
-//         const userData = {
-//           _id: data.id,
-//           email: data.email_addresses[0].email_address,
-//           name: `${data.first_name} ${data.last_name}`,
-//           imageUrl: data.image_url,
-//         };
-
-//         try {
-//           const user = await User.create(userData);
-//           console.log("✅ User Saved Successfully:", user);
-//         } catch (error) {
-//           console.error("❌ MongoDB Insertion Error:", error.message);
-//         }
-
-//         res.json({});
-//         break;
-//       }
-// API Controller Function to Manage Clerk User with database
 export const clerkWebhooks = async (req, res) => {
   try {
+    if (!req.headers["svix-id"]) {
+      console.log("⚠️ No svix headers detected, skipping verification (Postman Test Mode)");
+    } else {
+      const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
+      await whook.verify(JSON.stringify(req.body), {
+        "svix-id": req.headers["svix-id"],
+        "svix-timestamp": req.headers["svix-timestamp"],
+        "svix-signature": req.headers["svix-signature"],
+      });
+    }
 
-    // Create a Svix instance with clerk webhook secret.
-    const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
-
-    // Verifying Headers
-    await whook.verify(JSON.stringify(req.body), {
-      "svix-id": req.headers["svix-id"],
-      "svix-timestamp": req.headers["svix-timestamp"],
-      "svix-signature": req.headers["svix-signature"]
-    })
-
-    // Getting Data from request body
-    const { data, type } = req.body
-
-    // Switch Cases for differernt Events
+    const { data, type } = req.body;
     switch (type) {
-      case 'user.created': {
+      case "user.created": {
         console.log('👤 New user created webhook received');
         const userData = {
           _id: data.id,
           email: data.email_addresses[0].email_address,
-          name: data.first_name + " " + data.last_name,
+          name: `${data.first_name} ${data.last_name}`,
           imageUrl: data.image_url,
-          resume: ''
+        };
+
+        try {
+          const user = await User.create(userData);
+          console.log('✅ User saved to MongoDB:', userData);
+          console.log("✅ User Saved Successfully:", user);
+        } catch (error) {
+          console.error("❌ MongoDB Insertion Error:", error.message);
         }
-        await User.create(userData);
-        console.log('✅ User saved to MongoDB:', userData);
-        res.json({})
+
+        res.json({});
         break;
       }
+// API Controller Function to Manage Clerk User with database
+// export const clerkWebhooks = async (req, res) => {
+//   try {
+
+    // Create a Svix instance with clerk webhook secret.
+    // const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
+
+    // Verifying Headers
+    // await whook.verify(JSON.stringify(req.body), {
+    //   "svix-id": req.headers["svix-id"],
+    //   "svix-timestamp": req.headers["svix-timestamp"],
+    //   "svix-signature": req.headers["svix-signature"]
+    // })
+
+    // // Getting Data from request body
+    // const { data, type } = req.body
+
+    // // Switch Cases for differernt Events
+    // switch (type) {
+    //   case 'user.created': {
+    //     console.log('👤 New user created webhook received');
+    //     const userData = {
+    //       _id: data.id,
+    //       email: data.email_addresses[0].email_address,
+    //       name: data.first_name + " " + data.last_name,
+    //       imageUrl: data.image_url,
+    //       resume: ''
+    //     }
+    //     await User.create(userData);
+    //     console.log('✅ User saved to MongoDB:', userData);
+    //     res.json({})
+    //     break;
+    //   }
 
       case "user.updated":
         await User.findByIdAndUpdate(data.id, {
