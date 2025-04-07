@@ -14,6 +14,8 @@ import StudentsEnrolled from "./pages/educator/StudentsEnrolled";
 import Navbar from "./components/student/Navbar";
 import "quill/dist/quill.snow.css";
 import { ToastContainer } from 'react-toastify';
+import EditCourse from "./pages/educator/EditCourse";
+
 
 const App = () => {
 
@@ -37,6 +39,7 @@ const isEducatorRoute = useMatch('/educator/*')
           <Route path="add-course" element={<AddCourse />} />
           <Route path="my-courses" element={<MyCourses />} />
           <Route path="students-enrolled" element={<StudentsEnrolled />} />
+          <Route path="/educator/edit-course/:id" element={<EditCourse />} />
         </Route>
       </Routes>
     </div>

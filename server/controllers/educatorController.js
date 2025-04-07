@@ -96,6 +96,29 @@ res.json({ success: true, dashboardData: {
   }
 };
 
+//Update a course information
+export const updateCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const courseData = JSON.parse(req.body.courseData);
+    let updatedData = {
+      ...courseData
+    };
+
+    // If a new image is uploaded
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file); // assuming you have this util
+      updatedData.courseThumbnail = result.secure_url;
+    }
+
+    const updatedCourse = await Course.findByIdAndUpdate(courseId, updatedData, { new: true });
+
+    res.json({ success: true, course: updatedCourse, message: 'Course updated successfully' });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
 //Get Enrolled Students Data with Purchase Data
 export const getEnrolledStudentsData = async (req, res) => {
   try {
@@ -119,3 +142,21 @@ export const getEnrolledStudentsData = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 }
+
+//Define the getSingleCourse
+
+export const getSingleCourse = async (req, res) => {
+  try {
+    console.log("Request for course:", req.params.id);
+    const { id } = req.params;
+    const course = await Course.findById(id);
+
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    res.status(200).json({ success: true, courseData: course });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

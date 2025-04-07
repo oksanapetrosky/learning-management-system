@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCourse, educatorDashboardData, getEducatorCourses, getEnrolledStudentsData, updateRoleEducator } from '../controllers/educatorController.js';
+import { addCourse, educatorDashboardData, getEducatorCourses, getEnrolledStudentsData, updateRoleEducator, updateCourse, getSingleCourse } from '../controllers/educatorController.js';
 import upload from '../configs/multer.js';
 import { protectEducator } from '../middlewares/authMiddleware.js';
 
@@ -13,5 +13,7 @@ protectEducator, addCourse);
 educatorRouter.get('/courses', protectEducator, getEducatorCourses)
 educatorRouter.get('/dashboard', protectEducator, educatorDashboardData)
 educatorRouter.get('/enrolled-students', protectEducator, getEnrolledStudentsData)
+educatorRouter.put('/update-course/:id', upload.single('image'), protectEducator, updateCourse);
+educatorRouter.get('/course/:id', protectEducator, getSingleCourse);
 
 export default educatorRouter;
