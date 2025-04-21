@@ -44,6 +44,78 @@ export const addCourse = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+// server/controllers/courseController.js
+
+// export const editCourse = async (req, res) => {
+//   const { id } = req.body;
+
+//   try {
+//     const updateFields = {
+//       courseTitle: req.body.courseTitle,
+//       coursePrice: req.body.coursePrice,
+//       discount: req.body.discount,
+//       courseDescription: req.body.courseDescription,
+//     };
+
+//     if (req.file) {
+//       updateFields.image = req.file.filename;
+//     }
+
+//     const updatedCourse = await Course.findByIdAndUpdate(id, updateFields, {
+//       new: true,
+//     });
+
+//     if (!updatedCourse) {
+//       return res.status(404).json({ success: false, message: "Course not found" });
+//     }
+
+//     res.json({ success: true, message: "Course updated successfully", course: updatedCourse });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: "Error updating course", error: error.message });
+//   }
+// };
+
+export const editCourse = async (req, res) => {
+  const { id } = req.params; // not req.params.id.id 😄
+  const { courseTitle, coursePrice, discount, courseDescription } = req.body;
+
+  if (!courseTitle && !coursePrice && !discount && !courseDescription && !req.file) {
+    return res.status(400).json({ success: false, message: "No changes provided" });
+  }
+
+  try {
+    const course = await Course.findById(id);
+
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    if (courseTitle) course.courseTitle = courseTitle;
+    if (coursePrice) course.coursePrice = coursePrice;
+    if (discount) course.discount = discount;
+    if (courseDescription) course.courseDescription = courseDescription;
+    if (req.file) course.courseThumbnail = req.file.path;
+
+    await course.save();
+
+    res.json({ success: true, message: "Course updated successfully" });
+  } catch (error) {
+    console.error("Edit error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+// Delete course
+export const deleteCourse = async (req, res) => {
+  try {
+    await Course.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "Course deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 
 // Get Educator Courses
 export const getEducatorCourses = async (req, res) => {
@@ -96,28 +168,6 @@ res.json({ success: true, dashboardData: {
   }
 };
 
-//Update a course information
-export const updateCourse = async (req, res) => {
-  try {
-    const courseId = req.params.id;
-    const courseData = JSON.parse(req.body.courseData);
-    let updatedData = {
-      ...courseData
-    };
-
-    // If a new image is uploaded
-    if (req.file) {
-      const result = await uploadToCloudinary(req.file); // assuming you have this util
-      updatedData.courseThumbnail = result.secure_url;
-    }
-
-    const updatedCourse = await Course.findByIdAndUpdate(courseId, updatedData, { new: true });
-
-    res.json({ success: true, course: updatedCourse, message: 'Course updated successfully' });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
-};
 
 //Get Enrolled Students Data with Purchase Data
 export const getEnrolledStudentsData = async (req, res) => {
@@ -147,7 +197,6 @@ export const getEnrolledStudentsData = async (req, res) => {
 
 export const getSingleCourse = async (req, res) => {
   try {
-    console.log("Request for course:", req.params.id);
     const { id } = req.params;
     const course = await Course.findById(id);
 

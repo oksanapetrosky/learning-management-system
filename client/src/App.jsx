@@ -16,7 +16,6 @@ import "quill/dist/quill.snow.css";
 import { ToastContainer } from 'react-toastify';
 import EditCourse from "./pages/educator/EditCourse";
 
-
 const App = () => {
 
 const isEducatorRoute = useMatch('/educator/*')

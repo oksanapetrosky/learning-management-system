@@ -68,8 +68,10 @@ import { AppContext } from "../../context/AppContext";
 import Loading from "../../components/student/Loading";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
+import { MdOutlineEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const MyCourses = () => {
   const { currency, backendUrl, isEducator, getToken } = useContext(AppContext);
@@ -85,6 +87,67 @@ const MyCourses = () => {
       data.success && setCourses(data.courses);
     } catch (error) {
       toast.error(error.message);
+    }
+  };
+
+  // Delete Course Logic
+  // const handleDelete = async (id) => {
+  //   if (!window.confirm("Are you sure you want to delete this course?")) return;
+
+  //   try {
+  //     const token = await getToken();
+  //     const { data } = await axios.delete(`${backendUrl}/api/educator/delete-course/${id}`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     if (data.success) {
+  //       toast.success("Course deleted successfully");
+  //       setCourses((prevCourses) => prevCourses.filter((c) => c._id !== id));
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to delete course");
+  //     console.error("❌ Delete error:", error);
+  //   }
+  // };
+
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will permanently delete the course!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const token = await getToken();
+        const { data } = await axios.delete(
+          `${backendUrl}/api/educator/delete-course/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (data.success) {
+          Swal.fire("Deleted!", "The course has been deleted.", "success");
+          setCourses((prevCourses) => prevCourses.filter((c) => c._id !== id));
+        } else {
+          Swal.fire("Error", data.message, "error");
+        }
+      } catch (error) {
+        console.error("❌ Delete error:", error);
+        Swal.fire(
+          "Error",
+          "Something went wrong while deleting the course.",
+          "error"
+        );
+      }
     }
   };
 
@@ -111,6 +174,7 @@ const MyCourses = () => {
                   Published on
                 </th>
                 <th className="px-4 py-3 font-semibold truncate">Edit</th>
+                <th className="px-4 py-3 font-semibold truncate">Delete</th>
               </tr>
             </thead>
             <tbody className="text-sm text-gray-500">
@@ -145,9 +209,18 @@ const MyCourses = () => {
                       to={`/educator/edit-course/${course._id}`}
                       className="text-blue-600 hover:underline"
                     >
-                      Edit
+                      <MdOutlineEdit size={20}
+                       className="text-gray-400 text-2xl ml-3 cursor-pointer hover:scale-110 transition hover:text-blue-500"/>
                     </Link>
                   </td>
+                  <td className="px-4 py-3">
+                    <MdDelete
+                      size={20}
+                      className="text-gray-400 text-2xl cursor-pointer hover:scale-110 transition hover:text-red-500"
+                      onClick={() => handleDelete(course._id)}
+                    />
+                  </td>
+                 
                 </tr>
               ))}
             </tbody>
