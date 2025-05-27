@@ -76,15 +76,16 @@ export const addCourse = async (req, res) => {
 // };
 
 export const editCourse = async (req, res) => {
-  const { id } = req.params; // not req.params.id.id 😄
+  const { id } = req.params;
   const { courseTitle, coursePrice, discount, courseDescription } = req.body;
+  const imageFile = req.file;
 
   if (!courseTitle && !coursePrice && !discount && !courseDescription && !req.file) {
     return res.status(400).json({ success: false, message: "No changes provided" });
   }
 
   try {
-    const course = await Course.findById(id);
+    const course = await Course.findById(id).populate({ path: "educator" });
 
     if (!course) {
       return res.status(404).json({ success: false, message: "Course not found" });
@@ -122,6 +123,7 @@ export const getEducatorCourses = async (req, res) => {
   try {
     const educator = req.auth.userId;
     const courses = await Course.find({ educator });
+    console.log("💥 No educator route matched:", req.method, req.originalUrl);
     res.json({ success: true, courses });
   } catch (error) {
     res.json({ success: false, message: error.message });
@@ -204,7 +206,7 @@ export const getSingleCourse = async (req, res) => {
       return res.status(404).json({ success: false, message: "Course not found" });
     }
 
-    res.status(200).json({ success: true, courseData: course });
+    res.status(200).json({ success: true, course });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

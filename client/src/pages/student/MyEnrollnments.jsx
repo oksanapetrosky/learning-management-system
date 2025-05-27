@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { Line } from "rc-progress";
 import Footer from "../../components/student/Footer";
 import axios from "axios";
 import { toast } from "react-toastify";
+
+
 
 const MyEnrollnments = () => {
   const {
@@ -17,6 +19,8 @@ const MyEnrollnments = () => {
     calculateNoOfLectures,
   } = useContext(AppContext);
   const [progressArray, setProgressArray] = useState([]);
+  
+
   const getCourseProgress = async () => {
     try {
       const token = await getToken();
@@ -124,3 +128,6 @@ if (userData) {
 };
 
 export default MyEnrollnments;
+
+
+

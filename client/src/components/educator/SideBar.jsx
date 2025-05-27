@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { assets } from "../../assets/assets";
 import { AppContext } from "../../context/AppContext";
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
+import SidebarMenuItem from "../shared/SidebarMenuItem";
 
 const SideBar = () => {
   const { isEducator } = useContext(AppContext);
@@ -24,7 +25,7 @@ const SideBar = () => {
   return (
     isEducator && (
       <div className="md:w-64 w-16 border-r min-h-screen text-base border-gray-500">
-        {menuItems.map((item) => (
+        {/* {menuItems.map((item) => (
           <NavLink
             to={item.path}
             key={item.name}
@@ -32,11 +33,26 @@ const SideBar = () => {
             className={({
               isActive,
             }) => `flex items-center md:flex-row flex-col md:justify-start justify-center
-      py-3.5 md:px-10 gap-3 ${isActive ? 'bg-indigo-50 border-r-[6px] border-indigo-500/90' : 'hover:bg-gray-100/90 border-r-[6px] border-white hover:border-gray-100/90'}`}
+      py-3.5 md:px-10 gap-3 ${
+        isActive
+          ? "bg-indigo-50 border-r-[6px] border-indigo-500/90"
+          : "hover:bg-gray-100/90 border-r-[6px] border-white hover:border-gray-100/90"
+      }`}
           >
             <img src={item.icon} alt="item_icon" className="w-6 h-6" />
             <p className="md:block hidden text-center">{item.name}</p>
           </NavLink>
+        ))} */}
+
+        {/* Replaced with a new logic to avoid duplication */}
+        {menuItems.map((item) => (
+          <SidebarMenuItem
+            key={item.name}
+            path={item.path}
+            icon={item.icon}
+            name={item.name}
+            exact={item.path === "/educator"}
+          />
         ))}
       </div>
     )

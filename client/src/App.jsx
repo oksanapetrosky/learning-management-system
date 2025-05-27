@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { Route, Routes, useMatch } from "react-router-dom";
 import Home from "./pages/student/Home";
 import CoursesList from "./pages/student/CoursesList";
@@ -13,18 +13,39 @@ import MyCourses from "./pages/educator/MyCourses";
 import StudentsEnrolled from "./pages/educator/StudentsEnrolled";
 import Navbar from "./components/student/Navbar";
 import "quill/dist/quill.snow.css";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import EditCourse from "./pages/educator/EditCourse";
 
 const App = () => {
+  const isEducatorRoute = useMatch("/educator/*");
 
-const isEducatorRoute = useMatch('/educator/*')
+  // return (
+  //   <div className="text-default min-h-screen bg-white">
+  //     <ToastContainer />
+  //     {!isEducatorRoute && <Navbar />}
 
+  //     <Routes>
+  //       <Route path="/" element={<Home />} />
+  //       <Route path="/course-list" element={<CoursesList />} />
+  //       <Route path="/course-list/:input" element={<CoursesList />} />
+  //       <Route path="/course/:id" element={<CourseDetails />} />
+  //       <Route path="/my-enrollments" element={<MyEnrollnments />} />
+  //       <Route path="/player/:courseId" element={<Player />} />
+  //       <Route path="/loading/:path" element={<Loading />} />
+  //       <Route path="/educator" element={<Educator />}>
+  //       <Route path="/educator" element={<Dashboard />} />
+  //       <Route path="add-course" element={<AddCourse />} />
+  //       <Route path="my-courses" element={<MyCourses />} />
+  //       <Route path="students-enrolled" element={<StudentsEnrolled />} />
+  //       <Route path="/educator/edit-course/:id" element={<EditCourse />} />
+  //       </Route>
+  //     </Routes>
+  //   </div>
   return (
     <div className="text-default min-h-screen bg-white">
       <ToastContainer />
       {!isEducatorRoute && <Navbar />}
-      
+  
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/course-list" element={<CoursesList />} />
@@ -33,16 +54,21 @@ const isEducatorRoute = useMatch('/educator/*')
         <Route path="/my-enrollments" element={<MyEnrollnments />} />
         <Route path="/player/:courseId" element={<Player />} />
         <Route path="/loading/:path" element={<Loading />} />
+        <Route path="/thank-you" element={<div className="p-10 text-xl">Thanks for your feedback!</div>} />
+  
+        {/* Educator routes nested correctly */}
         <Route path="/educator" element={<Educator />}>
-          <Route path="/educator" element={<Dashboard />} />
+          <Route index element={<Dashboard />} />
           <Route path="add-course" element={<AddCourse />} />
           <Route path="my-courses" element={<MyCourses />} />
           <Route path="students-enrolled" element={<StudentsEnrolled />} />
-          <Route path="/educator/edit-course/:id" element={<EditCourse />} />
+          <Route path="edit-course/:id" element={<EditCourse />} />
         </Route>
       </Routes>
     </div>
   );
+  
+  // );
 };
 
 export default App;

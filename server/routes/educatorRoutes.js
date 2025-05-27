@@ -11,7 +11,7 @@ const educatorRouter = express.Router();
 educatorRouter.get('/update-role', updateRoleEducator);
 educatorRouter.post('/add-course', upload.single('image'), 
 protectEducator, addCourse);
-educatorRouter.put('/edit-course', upload.single('image'), protectEducator, editCourse);
+educatorRouter.put('/edit-course/:id', upload.single('image'), protectEducator, editCourse);
 educatorRouter.delete('/delete-course/:id', protectEducator, deleteCourse);
 
 

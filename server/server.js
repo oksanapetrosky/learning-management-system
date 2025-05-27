@@ -8,6 +8,7 @@ import { clerkMiddleware } from "@clerk/express";
 import connectCloudinary from "./configs/cloudinary.js";
 import courseRouter from "./routes/courseRoute.js";
 import userRouter from "./routes/userRoutes.js";
+// import testimonialRouter from "./routes/testimonialRoute.js";
 
 //initialize express
 const app = express();
@@ -21,14 +22,21 @@ connectCloudinary();
 //Middleware
 app.use(cors());
 app.use(clerkMiddleware());
+app.use(express.json());
 
 //Route
 app.get("/", (req, res) => res.send("API working"));
 app.post("/clerk", express.json(), clerkWebhooks);
-app.use("/api/educator", express.json(), educatorRouter);
-app.use('/api/course', express.json(), courseRouter);
-app.use('/api/user', express.json(), userRouter); 
+// app.use("/api/educator", express.json(), educatorRouter);
+// app.use('/api/course', express.json(), courseRouter);
+// app.use('/api/user', express.json(), userRouter); 
+app.use("/api/educator", educatorRouter);
+app.use("/api/course", courseRouter);
+app.use("/api/user", userRouter);
 app.post('/webhook', express.raw({type: 'application/json'}), stripeWebhooks)
+
+// app.use("/api/testimonials", express.json(), testimonialRouter);
+// app.use("/api/testimonials", testimonialRouter);
 
 //Port
 const PORT = process.env.PORT || 5000;

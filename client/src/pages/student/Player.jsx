@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { assets } from "../../assets/assets";
@@ -9,6 +9,7 @@ import Rating from "../../components/student/Rating";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Loading from "../../components/student/Loading";
+// import AddTestimonial from "../../components/shared/AddTestimonial";
 
 const Player = () => {
   const {
@@ -25,6 +26,7 @@ const Player = () => {
   const [playerData, setPlayerData] = useState(null);
   const [progressData, setProgressData] = useState(null);
   const [initialRating, setInitialRating] = useState(0);
+  // const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
   const getCourseData = () => {
     enrolledCourses.map((course) => {
@@ -59,7 +61,7 @@ const Player = () => {
       );
       if (data.success) {
         toast.success(data.message);
-        getCourseProgress()
+        getCourseProgress();
       } else {
         toast.error(data.message);
       }
@@ -72,38 +74,43 @@ const Player = () => {
     try {
       const token = await getToken();
       const { data } = await axios.post(
-        backendUrl + '/api/user/get-course-progress', {courseId}, { headers: { Authorization: `Bearer ${token}` }}
+        backendUrl + "/api/user/get-course-progress",
+        { courseId },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-    if(data.success){
-      setProgressData(data.progressData)
-    } else{
-      toast.error(data.message)
-    }
-
+      if (data.success) {
+        setProgressData(data.progressData);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
   const handleRate = async (rating) => {
     try {
-      const token = await getToken()
-      const {data} = await axios.post(backendUrl + '/api/user/add-rating', {courseId, rating}, {headers: { Authorization: `Bearer ${token}` }})
+      const token = await getToken();
+      const { data } = await axios.post(
+        backendUrl + "/api/user/add-rating",
+        { courseId, rating },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       if (data.success) {
-        toast.success(data.message)
-        fetchUserEnrolledCourses()
-      } else{
-        toast.error(data.message)
+        toast.success(data.message);
+        fetchUserEnrolledCourses();
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
 
-  useEffect(()=> {
-   getCourseProgress()
-  },[])
+  useEffect(() => {
+    getCourseProgress();
+  }, [getCourseData]);
 
   return courseData ? (
     <>
@@ -158,7 +165,12 @@ const Player = () => {
                         <li key={i} className="flex items-start gap-2 py-1">
                           <img
                             src={
-                              progressData && progressData.lectureCompleted.includes(lecture.lectureId) ? assets.blue_tick_icon : assets.play_icon
+                              progressData &&
+                              progressData.lectureCompleted.includes(
+                                lecture.lectureId
+                              )
+                                ? assets.blue_tick_icon
+                                : assets.play_icon
                             }
                             alt="play_icon"
                             className="w-4 h-4 mt-1"
@@ -201,9 +213,37 @@ const Player = () => {
 
           <div className="flex items-center gap-2 py-3 mt-10">
             <h1 className="text-xl font-bold">Rate this Course:</h1>
-            <Rating initialRating={initialRating} onRate={handleRate}/>
-
+            <Rating initialRating={initialRating} onRate={handleRate} />
           </div>
+
+          {/* {!showFeedbackForm ? (
+            <button
+              onClick={() => setShowFeedbackForm(true)}
+              className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 mt-4"
+            >
+              Leave Feedback
+            </button>
+
+
+          ) : (
+            <div className="mt-4">
+              <AddTestimonial
+                courseId={courseData._id}
+                testimonials={[]} // dummy array
+                setTestimonials={() => {}} // dummy function
+                onSuccess={() => {
+                  toast.success("Thank you for your feedback!");
+                  setShowFeedbackForm(false);
+                }}
+              />
+              <button
+                onClick={() => setShowFeedbackForm(false)}
+                className="text-sm text-blue-600 underline mt-2"
+              >
+                Cancel
+              </button>
+            </div>
+          )} */}
         </div>
 
         {/* Right column */}
@@ -219,8 +259,14 @@ const Player = () => {
                   {playerData.chapter}.{playerData.lecture}{" "}
                   {playerData.lectureTitle}
                 </p>
-                <button onClick={()=> markLectureAsCompleted(playerData.lectureId)} className="text-blue-600">
-                  {progressData && progressData.lectureCompleted.includes(playerData.lectureId) ? "Completed" : "Mark Complete"}
+                <button
+                  onClick={() => markLectureAsCompleted(playerData.lectureId)}
+                  className="text-blue-600"
+                >
+                  {progressData &&
+                  progressData.lectureCompleted.includes(playerData.lectureId)
+                    ? "Completed"
+                    : "Mark Complete"}
                 </button>
               </div>
             </div>
@@ -234,8 +280,9 @@ const Player = () => {
       </div>
       <Footer />
     </>
-  ) : <Loading />
-
+  ) : (
+    <Loading />
+  );
 };
 
 export default Player;

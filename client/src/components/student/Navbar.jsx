@@ -1,16 +1,19 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
+// import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import { AppContext } from "../../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import UserControls from "../shared/UserControls";
+
 
 const Navbar = () => {
   const { navigate, isEducator, backendUrl, setIsEducator, getToken } =
     useContext(AppContext);
   const isCourseListPage = location.pathname.includes("/course-list");
-  const { openSignIn } = useClerk();
+  // const { openSignIn } = useClerk();
   const { user } = useUser();
 
   const becomeEducator = async () => {
@@ -59,8 +62,8 @@ const Navbar = () => {
               <Link to="/my-enrollments">My Enrollments</Link>
             </>
           )}
-        </div>
-        {user ? (
+         </div>
+        {/*{user ? (
           <UserButton />
         ) : (
           <button
@@ -69,7 +72,10 @@ const Navbar = () => {
           >
             Create Account
           </button>
-        )}
+        )}  */}
+
+        <UserControls />
+
       </div>
       {/* For mobile devices */}
       <div className="md:hidden flex items-center gap-2 sm:gap-5 text-gray-500">
@@ -83,13 +89,15 @@ const Navbar = () => {
             </>
           )}
         </div>
-        {user ? (
+        {/* {user ? (
           <UserButton />
         ) : (
           <button onClick={() => openSignIn()}>
             <img src={assets.user_icon} alt="user-icon" />
           </button>
-        )}
+        )} */}
+
+        <UserControls isMobile />
       </div>
     </div>
   );

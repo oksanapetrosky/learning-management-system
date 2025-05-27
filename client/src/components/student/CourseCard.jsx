@@ -1,7 +1,9 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { assets } from '../../assets/assets'
 import { AppContext } from '../../context/AppContext'
+import PropTypes from "prop-types";
+
 
 const CourseCard = ({ course }) => {
 
@@ -15,6 +17,7 @@ const CourseCard = ({ course }) => {
                 <p className="text-gray-500">{course.educator?.name || "unknown"}</p>
                 <div className="flex items-center space-x-2">
                     <p>{calculateRating(course)}</p>
+                  
                     <div className="flex">
                         {[...Array(5)].map((_, i) => (
                             <img
@@ -32,5 +35,21 @@ const CourseCard = ({ course }) => {
         </Link>
     )
 }
+
+
+CourseCard.propTypes = {
+  course: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    courseThumbnail: PropTypes.string,
+    courseTitle: PropTypes.string,
+    educator: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    courseRatings: PropTypes.arrayOf(PropTypes.object),
+    coursePrice: PropTypes.number,
+    discount: PropTypes.number,
+  }).isRequired,
+};
+
 
 export default CourseCard
