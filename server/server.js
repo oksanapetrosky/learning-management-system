@@ -8,6 +8,7 @@ import { clerkMiddleware } from "@clerk/express";
 import connectCloudinary from "./configs/cloudinary.js";
 import courseRouter from "./routes/courseRoute.js";
 import userRouter from "./routes/userRoutes.js";
+
 // import testimonialRouter from "./routes/testimonialRoute.js";
 
 //initialize express
@@ -20,7 +21,11 @@ connectDB();
 connectCloudinary();
 
 //Middleware
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173'],  // or your frontend URL
+  credentials: true
+}));
 app.use(clerkMiddleware());
 app.use(express.json());
 
