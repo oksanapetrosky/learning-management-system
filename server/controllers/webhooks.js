@@ -148,18 +148,23 @@ const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
 // ✅ Clerk Webhook (No Changes Here)
 export const clerkWebhooks = async (req, res) => {
   try {
+    console.log("🚀 Clerk Webhook Received:", new Date().toISOString());
     if (!req.headers["svix-id"]) {
       console.log("⚠️ No svix headers detected, skipping verification (Postman Test Mode)");
     } else {
+       console.log("🧾 Svix Headers found. Verifying signature...");
       const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
       await whook.verify(JSON.stringify(req.body), {
         "svix-id": req.headers["svix-id"],
         "svix-timestamp": req.headers["svix-timestamp"],
         "svix-signature": req.headers["svix-signature"],
       });
+      console.log("✅ Webhook signature verified successfully.");
     }
 
     const { data, type } = req.body;
+    console.log("📦 Webhook Type:", type);
+    console.log("📄 Incoming User Data:", JSON.stringify(data, null, 2));
     switch (type) {
       case "user.created": {
         console.log('👤 New user created webhook received');
