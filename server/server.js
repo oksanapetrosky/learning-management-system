@@ -23,23 +23,27 @@ connectCloudinary();
 //Middleware
 // app.use(cors());
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173'],  // or your frontend URL
+  origin: ['http://localhost:5000', 'http://localhost:5173'],  // or your frontend URL
   credentials: true
 }));
+
+app.post('/webhook', express.raw({type: 'application/json'}), stripeWebhooks)
 app.use(clerkMiddleware());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //Route
 app.get("/", (req, res) => res.send("API working"));
 // app.post("/clerk", express.json(), clerkWebhooks);
 app.post("/api/webhooks/clerk", express.json({ type: "*/*" }), clerkWebhooks);
+
 // app.use("/api/educator", express.json(), educatorRouter);
 // app.use('/api/course', express.json(), courseRouter);
 // app.use('/api/user', express.json(), userRouter); 
 app.use("/api/educator", educatorRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/user", userRouter);
-app.post('/webhook', express.raw({type: 'application/json'}), stripeWebhooks)
+
 
 // app.use("/api/testimonials", express.json(), testimonialRouter);
 // app.use("/api/testimonials", testimonialRouter);
